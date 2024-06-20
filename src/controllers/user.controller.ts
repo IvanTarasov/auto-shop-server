@@ -17,7 +17,7 @@ import {
     ) {}
   
     @Post('user')
-    async signupUser(
+    async registration(
       @Body() userData: { email: string; name: string; password: string; phone: string},
     ): Promise<UserModel> {
       return this.userService.createUser(userData);
