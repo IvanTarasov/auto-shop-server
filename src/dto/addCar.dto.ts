@@ -1,27 +1,27 @@
-import { $Enums } from '@prisma/client'
-import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import { $Enums } from '@prisma/client';
+import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class AddCarDto {
     @IsString()
     @IsNotEmpty()
-    name: string
+    name: string;
 
     @IsInt()
     @IsNotEmpty()
-    price: number
+    price: number;
 
     @IsInt()
     @IsNotEmpty()
-    year: number
+    year: number;
 
     @IsString()
-    description: string
-
-    @IsString()
-    @IsNotEmpty()
-    status: $Enums.CarStatus
+    description: string;
 
     @IsString()
     @IsNotEmpty()
-    type: $Enums.CarType
+    status: $Enums.CarStatus;
+
+    @IsString()
+    @IsNotEmpty()
+    type: $Enums.CarType;
 }

@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CarService } from '../services/car.service';
 import { $Enums, Car as CarModel, Prisma } from '@prisma/client';
 import { Express } from 'express';
-import { randomUUID, UUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { AddCarDto } from '../dto/addCar.dto';
 

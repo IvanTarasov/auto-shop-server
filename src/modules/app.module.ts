@@ -4,10 +4,12 @@ import { join } from 'path';
 
 import { UserController } from '../controllers/user.controller';
 import { CarController } from '../controllers/car.controller';
+import { OrderController } from 'src/controllers/order.controller';
 
 import { PrismaService } from '../services/prisma.service';
 import { UserService } from '../services/user.service';
 import { CarService } from '../services/car.service';
+import { OrderService } from 'src/services/order.service';
 
 @Module({
     imports: [
@@ -15,7 +17,7 @@ import { CarService } from '../services/car.service';
             rootPath: join(__dirname, '..', '..', 'public'),
         }),
     ],
-    controllers: [UserController, CarController],
-    providers: [PrismaService, UserService, CarService],
+    controllers: [UserController, CarController, OrderController],
+    providers: [PrismaService, UserService, CarService, OrderService],
 })
 export class AppModule {}
