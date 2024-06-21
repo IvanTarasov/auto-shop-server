@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
+import { JwtModule } from '@nestjs/jwt';
+
 import { UserController } from '../controllers/user.controller';
 import { CarController } from '../controllers/car.controller';
 import { OrderController } from 'src/controllers/order.controller';
@@ -15,6 +17,11 @@ import { OrderService } from 'src/services/order.service';
     imports: [
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', '..', 'public'),
+        }),
+        JwtModule.register({
+            global: true,
+            secret: process.env.SECRET_KEY,
+            signOptions: { expiresIn: '60s' },
         }),
     ],
     controllers: [UserController, CarController, OrderController],

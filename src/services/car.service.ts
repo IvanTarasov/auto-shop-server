@@ -55,10 +55,10 @@ export class CarService {
 
     // удаление автомобиля
     async deleteCar(where: Prisma.CarWhereUniqueInput): Promise<Car> {
-        let delCar = this.prisma.car.delete({
+        const delCar = await this.prisma.car.delete({
             where,
         });
-        unlink('./public/' + (await delCar).img, (err) => {});
+        unlink('./public/' + delCar.img, (err) => {});
         return delCar;
     }
 }
