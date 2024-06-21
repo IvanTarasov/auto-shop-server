@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common'
-import { PrismaService } from './prisma.service'
-import { Car, Prisma } from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+import { Car, Prisma } from '@prisma/client';
+import { unlink } from 'fs';
 
 @Injectable()
 export class CarService {
@@ -12,50 +13,52 @@ export class CarService {
     ): Promise<Car | null> {
         return this.prisma.car.findUnique({
             where: carWhereUniqueInput,
-        })
+        });
     }
 
     // возврат списка автомобилей
     async cars(params: {
-        skip?: number
-        take?: number
-        cursor?: Prisma.CarWhereUniqueInput
-        where?: Prisma.CarWhereInput
-        orderBy?: Prisma.CarOrderByWithRelationInput
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.CarWhereUniqueInput;
+        where?: Prisma.CarWhereInput;
+        orderBy?: Prisma.CarOrderByWithRelationInput;
     }): Promise<Car[]> {
-        const { skip, take, cursor, where, orderBy } = params
+        const { skip, take, cursor, where, orderBy } = params;
         return this.prisma.car.findMany({
             skip,
             take,
             cursor,
             where,
             orderBy,
-        })
+        });
     }
 
     // добавление автомобиля
     async addCar(data: Prisma.CarCreateInput): Promise<Car> {
         return this.prisma.car.create({
             data,
-        })
+        });
     }
 
     // обновление данных автомобиля
     async updateCar(params: {
-        where: Prisma.CarWhereUniqueInput
-        data: Prisma.CarUpdateInput
+        where: Prisma.CarWhereUniqueInput;
+        data: Prisma.CarUpdateInput;
     }): Promise<Car> {
-        const { where, data } = params
+        const { where, data } = params;
         return this.prisma.car.update({
-            data,
             where,
-        })
+            data,
+        });
     }
 
     // удаление автомобиля
     async deleteCar(where: Prisma.CarWhereUniqueInput): Promise<Car> {
-        return this.prisma.car.delete({
+        let delCar = this.prisma.car.delete({
             where,
-        })
+        });
+        unlink('./public/' + (await delCar).img, (err) => {});
+        return delCar;
     }
 }

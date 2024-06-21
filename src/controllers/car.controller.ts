@@ -9,14 +9,14 @@ import {
     UseInterceptors,
     UploadedFile,
     Query,
-} from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { CarService } from '../services/car.service'
-import { $Enums, Car as CarModel, Prisma } from '@prisma/client'
-import { Express } from 'express'
-import { randomUUID, UUID } from 'crypto'
-import { diskStorage } from 'multer'
-import { AddCarDto } from '../dto/addCar.dto'
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CarService } from '../services/car.service';
+import { $Enums, Car as CarModel, Prisma } from '@prisma/client';
+import { Express } from 'express';
+import { randomUUID, UUID } from 'crypto';
+import { diskStorage } from 'multer';
+import { AddCarDto } from '../dto/addCar.dto';
 
 @Controller()
 export class CarController {
@@ -26,9 +26,9 @@ export class CarController {
     @UseInterceptors(
         FileInterceptor('file', {
             storage: diskStorage({
-                destination: './uploads',
+                destination: './public',
                 filename: (req, file, cb) => {
-                    cb(null, `${randomUUID()}.jpg`)
+                    cb(null, `${randomUUID()}.jpg`);
                 },
             }),
         }),
@@ -45,12 +45,23 @@ export class CarController {
             status: carData.status,
             type: carData.type,
             img: file.filename,
-        })
+        });
+    }
+
+    @Put('car/:id')
+    async changeStatus(
+        @Param('id') id: string,
+        @Query('status') status: $Enums.CarStatus,
+    ): Promise<CarModel> {
+        return this.carService.updateCar({
+            where: { id: Number(id) },
+            data: { status: status },
+        });
     }
 
     @Get('car/:id')
     async getCarById(@Param('id') id: string): Promise<CarModel> {
-        return this.carService.car({ id: Number(id) })
+        return this.carService.car({ id: Number(id) });
     }
 
     @Get('car')
@@ -61,51 +72,46 @@ export class CarController {
     ): Promise<CarModel[]> {
         if (order) {
             if (status && type) {
-                return (
-                    await this.carService.cars({
-                        where: { status, type },
-                        orderBy: { price: order },
-                    })
-                ).sort()
+                return await this.carService.cars({
+                    where: { status, type },
+                    orderBy: { price: order },
+                });
             }
             if (!status && !type) {
-                return (
-                    await this.carService.cars({ orderBy: { price: order } })
-                ).sort()
+                return await this.carService.cars({
+                    orderBy: { price: order },
+                });
             }
             if (!status && type) {
-                return (
-                    await this.carService.cars({
-                        where: { type },
-                        orderBy: { price: order },
-                    })
-                ).sort()
+                return await this.carService.cars({
+                    where: { type },
+                    orderBy: { price: order },
+                });
             }
             if (status && !type) {
-                return (
-                    await this.carService.cars({
-                        where: { status },
-                        orderBy: { price: order },
-                    })
-                ).sort()
+                return await this.carService.cars({
+                    where: { status },
+                    orderBy: { price: order },
+                });
             }
         } else {
             if (status && type) {
-                return (
-                    await this.carService.cars({ where: { status, type } })
-                ).sort()
+                return await this.carService.cars({ where: { status, type } });
             }
             if (!status && !type) {
-                return (await this.carService.cars({})).sort()
+                return await this.carService.cars({});
             }
             if (!status && type) {
-                return (await this.carService.cars({ where: { type } })).sort()
+                return await this.carService.cars({ where: { type } });
             }
             if (status && !type) {
-                return (
-                    await this.carService.cars({ where: { status } })
-                ).sort()
+                return await this.carService.cars({ where: { status } });
             }
         }
+    }
+
+    @Delete('car/:id')
+    async deleteCar(@Param('id') id: string): Promise<CarModel> {
+        return this.carService.deleteCar({ id: Number(id) });
     }
 }
