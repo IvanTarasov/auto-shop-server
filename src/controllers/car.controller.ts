@@ -18,17 +18,13 @@ import { Express } from 'express';
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { AddCarDto } from '../dto/addCar.dto';
-import { AuthGuard } from '../auth/auth.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RolesGuard } from '../auth/roles.guard';
+import { AuthGuard } from '../modules/auth/auth.guard';
+import { RolesGuard } from '../modules/auth/roles.guard';
 
 @Controller()
 export class CarController {
     constructor(private readonly carService: CarService) {}
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
     @Post('car')
     @UseInterceptors(
         FileInterceptor('file', {
@@ -55,9 +51,6 @@ export class CarController {
         });
     }
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
     @Put('car/:id')
     async changeStatus(
         @Param('id') id: string,
@@ -120,9 +113,6 @@ export class CarController {
         }
     }
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
     @Delete('car/:id')
     async deleteCar(@Param('id') id: string): Promise<CarModel> {
         return this.carService.deleteCar({ id: Number(id) });
