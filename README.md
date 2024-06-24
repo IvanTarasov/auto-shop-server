@@ -1,18 +1,39 @@
 # Auto-shop-server
 
-API
+## For start
 
--Authorization-
+> .env
 
-// SingIn
+```
+DATABASE_URL="your url"
+SECRET_KEY="some secret key"
+```
+
+> npm
+
+```
+npm install
+npm start
+```
+
+## API
+
+# Authorization
+
+> SingIn
+
+```
 [POST]
 /auth/login
 {
 "email": "some_email@mail.ru",
 "password": "some_password"
 }
+```
 
-// Registration
+> Registration
+
+```
 [POST]
 /auth/registration
 {
@@ -21,10 +42,13 @@ API
 "password": "some_password",
 "phone": "some_phone"
 }
+```
 
--Cars-
+# Cars
 
-// Add new car
+> Add new car
+
+```
 ['ADMIN', 'USER']
 [POST]
 /car
@@ -33,67 +57,101 @@ API
 "price": some_price,
 "year": some_year,
 ?"description": "some_descr",
-"type": some_type, // SPORT, LUX, TUNED, ORIGINAL
-"status": some_status // SOLD, EXPOSED, PROCESSED (Only EXPOSED for USER)
+"type": some_type, > SPORT, LUX, TUNED, ORIGINAL
+"status": some_status > SOLD, EXPOSED, PROCESSED (Only EXPOSED for USER)
 "file": IMG_FILE.jpg
 }
+```
 
-// Change status for car by ID
+> Change status for car by ID
+
+```
 ['ADMIN']
 [PUT]
 /car/:id?status=NEW_STATUS
+```
 
-// Get all cars
+> Get all cars
+
+```
 ['ADMIN']
 [GET]
-/car?type=TYPE&status=STATUS&order=ORDER // order: desc or acs
+/car?type=TYPE&status=STATUS&order=ORDER > order: desc or acs
+```
 
-// Get car by ID
+> Get car by ID
+
+```
 ['ADMIN']
 [GET]
 /car/:id
+```
 
-// Get only exposed cars
+> Get only exposed cars
+
+```
 [GET]
-/exp-car?type=TYPE&order=ORDER // order: desc or acs
+/exp-car?type=TYPE&order=ORDER > order: desc or acs
+```
 
-// Get exposed car by ID
+> Get exposed car by ID
+
+```
 [GET]
 /exp-car/:id
+```
 
-// Remove car by ID
+> Remove car by ID
+
+```
 ['ADMIN']
 [DELETE]
 /car/:id
+```
 
--Orders-
+# Orders
 
-// Add new order
+> Add new order
+
+```
 ['ADMIN', 'USER']
 [POST]
 /order
 {
 "carId": CAR_ID,
 "userId": USER_ID,
-"type": some_type // BUYING, SELLING
-} // default status - PROCESSED
+"type": some_type     // BUYING, SELLING
+}                    // default status - PROCESSED
+```
 
-// Change status for order by ID
+> Change status for order by ID
+
+```
 ['ADMIN']
 [PUT]
 /order/:id?status=NEW_STATUS
+```
 
-// Get all orders
+> Get all orders
+
+```
 ['ADMIN']
 [GET]
 /order?type=TYPE&status=STATUS // types: BUYING, SELLING; status: PROCESSED, CANCELED, COMPLETED
+```
 
-// Get order by ID
+> Get order by ID
+
+```
 ['ADMIN']
 [GET]
 /order/:id
+```
 
-// Remove order by ID
+> Remove order by ID
+
+```
 ['ADMIN']
 [DELETE]
 /order/:id
+```
