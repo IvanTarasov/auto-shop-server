@@ -20,7 +20,7 @@ import { Express } from 'express';
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { AddCarDto } from '../dto/addCar.dto';
-import { AuthGuard } from '../modules/auth/auth.guard';
+import { AccessTokenGuard } from '../modules/auth/accessToken.guard';
 import { RolesGuard } from '../modules/auth/roles.guard';
 import { Request } from 'express';
 
@@ -29,7 +29,7 @@ export class CarController {
     constructor(private readonly carService: CarService) {}
 
     @SetMetadata('roles', ['ADMIN', 'USER'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Post('car')
     @UseInterceptors(
         FileInterceptor('file', {
@@ -46,7 +46,7 @@ export class CarController {
         @Body() carData: AddCarDto,
         @UploadedFile() file: Express.Multer.File,
     ): Promise<CarModel> {
-        if (request['user'].role === 'USER') {
+        if (request['user'] === 'USER') {
             carData.status = 'PROCESSED';
         }
         return this.carService.addCar({
@@ -61,7 +61,7 @@ export class CarController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Put('car/:id')
     async changeStatus(
         @Param('id') id: string,
@@ -74,7 +74,7 @@ export class CarController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Get('car/:id')
     async getCarById(@Param('id') id: string): Promise<CarModel> {
         return this.carService.car({ id: Number(id) });
@@ -86,7 +86,7 @@ export class CarController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Get('car')
     async getCars(
         @Query('status') status?: $Enums.CarStatus,
@@ -166,7 +166,7 @@ export class CarController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Delete('car/:id')
     async deleteCar(@Param('id') id: string): Promise<CarModel> {
         return this.carService.deleteCar({ id: Number(id) });
