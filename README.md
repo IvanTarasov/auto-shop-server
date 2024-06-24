@@ -18,7 +18,7 @@ npm start
 
 ## API
 
-# Authorization
+### Authorization
 
 > SingIn
 
@@ -44,7 +44,7 @@ npm start
 }
 ```
 
-# Cars
+### Cars
 
 > Add new car
 
@@ -109,7 +109,7 @@ npm start
 /car/:id
 ```
 
-# Orders
+### Orders
 
 > Add new order
 
