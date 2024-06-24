@@ -1,21 +1,26 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { $Enums } from '@prisma/client';
-import { ROLES_KEY } from './roles.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(private reflector: Reflector) {}
 
     canActivate(context: ExecutionContext): boolean {
-        const requiredRoles = this.reflector.getAllAndOverride<$Enums.Role[]>(
-            ROLES_KEY,
-            [context.getHandler(), context.getClass()],
+        const roles = this.reflector.get<string[]>(
+            'roles',
+            context.getHandler(),
         );
-        if (!requiredRoles) {
+        if (!roles) {
             return true;
         }
         const { user } = context.switchToHttp().getRequest();
-        return requiredRoles.some((role) => user.role === role);
+
+        let check = false;
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i] == user.role) {
+                check = true;
+            }
+        }
+        return check;
     }
 }

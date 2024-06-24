@@ -10,6 +10,8 @@ import {
     UploadedFile,
     Query,
     UseGuards,
+    SetMetadata,
+    Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CarService } from '../services/car.service';
@@ -18,17 +20,16 @@ import { Express } from 'express';
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { AddCarDto } from '../dto/addCar.dto';
-import { AuthGuard } from '../auth/auth.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RolesGuard } from '../auth/roles.guard';
+import { AuthGuard } from '../modules/auth/auth.guard';
+import { RolesGuard } from '../modules/auth/roles.guard';
+import { Request } from 'express';
 
 @Controller()
 export class CarController {
     constructor(private readonly carService: CarService) {}
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
+    @SetMetadata('roles', ['ADMIN', 'USER'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Post('car')
     @UseInterceptors(
         FileInterceptor('file', {
@@ -41,9 +42,13 @@ export class CarController {
         }),
     )
     async addCar(
+        @Req() request: Request,
         @Body() carData: AddCarDto,
         @UploadedFile() file: Express.Multer.File,
     ): Promise<CarModel> {
+        if (request['user'].role === 'USER') {
+            carData.status = 'PROCESSED';
+        }
         return this.carService.addCar({
             name: carData.name,
             price: carData.price,
@@ -55,9 +60,8 @@ export class CarController {
         });
     }
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Put('car/:id')
     async changeStatus(
         @Param('id') id: string,
@@ -69,11 +73,20 @@ export class CarController {
         });
     }
 
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Get('car/:id')
     async getCarById(@Param('id') id: string): Promise<CarModel> {
         return this.carService.car({ id: Number(id) });
     }
 
+    @Get('exp-car/:id')
+    async getExposedCarById(@Param('id') id: string): Promise<CarModel> {
+        return this.carService.car({ id: Number(id), status: 'EXPOSED' });
+    }
+
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Get('car')
     async getCars(
         @Query('status') status?: $Enums.CarStatus,
@@ -120,9 +133,40 @@ export class CarController {
         }
     }
 
-    @Roles($Enums.Role.ADMIN)
-    @UseGuards(AuthGuard)
-    @UseGuards(RolesGuard)
+    @Get('exp-car')
+    async getExposedCars(
+        @Query('type') type?: $Enums.CarType,
+        @Query('order') order?: Prisma.SortOrder,
+    ): Promise<CarModel[]> {
+        if (order) {
+            if (type) {
+                return await this.carService.cars({
+                    where: { status: 'EXPOSED', type },
+                    orderBy: { price: order },
+                });
+            }
+            if (!type) {
+                return await this.carService.cars({
+                    where: { status: 'EXPOSED' },
+                    orderBy: { price: order },
+                });
+            }
+        } else {
+            if (type) {
+                return await this.carService.cars({
+                    where: { status: 'EXPOSED', type },
+                });
+            }
+            if (!type) {
+                return await this.carService.cars({
+                    where: { status: 'EXPOSED' },
+                });
+            }
+        }
+    }
+
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Delete('car/:id')
     async deleteCar(@Param('id') id: string): Promise<CarModel> {
         return this.carService.deleteCar({ id: Number(id) });
