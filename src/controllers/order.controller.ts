@@ -20,16 +20,19 @@ import { RolesGuard } from '../modules/auth/roles.guard';
 export class OrderController {
     constructor(private readonly orderService: OrderService) {}
 
+    @SetMetadata('roles', ['ADMIN', 'USER'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Post('order')
     async addOrder(@Body() orderData: AddOrderDto): Promise<OrderModel> {
         return await this.orderService.addOrder({
             user: { connect: { id: orderData.userId } },
             car: { connect: { id: orderData.carId } },
-            status: orderData.status,
             type: orderData.type,
         });
     }
 
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Put('order/:id')
     async changeStatus(
         @Param('id') id: string,
@@ -41,14 +44,15 @@ export class OrderController {
         });
     }
 
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Get('order/:id')
     async getOrderById(@Param('id') id: string): Promise<OrderModel> {
         return await this.orderService.order({ id: Number(id) });
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard)
-    //@UseGuards(RolesGuard)
+    @UseGuards(AuthGuard, RolesGuard)
     @Get('order')
     async getOrders(
         @Query('status') status?: $Enums.OrderStatus,
@@ -74,6 +78,8 @@ export class OrderController {
         }
     }
 
+    @SetMetadata('roles', ['ADMIN'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Delete('order/:id')
     async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
         return await this.orderService.deleteOrder({ id: Number(id) });

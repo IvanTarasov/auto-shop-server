@@ -18,7 +18,6 @@ export class AddCarDto {
     description: string;
 
     @IsString()
-    @IsNotEmpty()
     status: $Enums.CarStatus;
 
     @IsString()
