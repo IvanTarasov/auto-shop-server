@@ -6,14 +6,15 @@
 
 ```
 DATABASE_URL="your url"
-SECRET_KEY="some secret key"
+JWT_ACCESS_SECRET="some secret key"
+JWT_REFRESH_SECRET="some secret key"
 ```
 
 > npm
 
 ```
 npm install
-npm start
+npm run start
 ```
 
 ## API
@@ -42,6 +43,22 @@ npm start
 "password": "some_password",
 "phone": "some_phone"
 }
+```
+
+> Logout
+
+```
+[Bearer as access token]
+[GET]
+/auth/logout
+```
+
+> Refresh tokens
+
+```
+[Bearer as refresh token]
+[GET]
+/auth/refresh
 ```
 
 ### Cars

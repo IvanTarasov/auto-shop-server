@@ -13,7 +13,7 @@ import {
 import { OrderService } from '../services/order.service';
 import { $Enums, Order as OrderModel, Prisma } from '@prisma/client';
 import { AddOrderDto } from '../dto/addOrder.dto';
-import { AuthGuard } from '../modules/auth/auth.guard';
+import { AccessTokenGuard } from '../modules/auth/accessToken.guard';
 import { RolesGuard } from '../modules/auth/roles.guard';
 
 @Controller()
@@ -21,7 +21,7 @@ export class OrderController {
     constructor(private readonly orderService: OrderService) {}
 
     @SetMetadata('roles', ['ADMIN', 'USER'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Post('order')
     async addOrder(@Body() orderData: AddOrderDto): Promise<OrderModel> {
         return await this.orderService.addOrder({
@@ -32,7 +32,7 @@ export class OrderController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Put('order/:id')
     async changeStatus(
         @Param('id') id: string,
@@ -45,14 +45,14 @@ export class OrderController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Get('order/:id')
     async getOrderById(@Param('id') id: string): Promise<OrderModel> {
         return await this.orderService.order({ id: Number(id) });
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Get('order')
     async getOrders(
         @Query('status') status?: $Enums.OrderStatus,
@@ -79,7 +79,7 @@ export class OrderController {
     }
 
     @SetMetadata('roles', ['ADMIN'])
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Delete('order/:id')
     async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
         return await this.orderService.deleteOrder({ id: Number(id) });
