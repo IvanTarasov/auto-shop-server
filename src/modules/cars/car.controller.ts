@@ -14,14 +14,14 @@ import {
     Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CarService } from '../services/car.service';
+import { CarService } from '../cars/car.service';
 import { $Enums, Car as CarModel, Prisma } from '@prisma/client';
 import { Express } from 'express';
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
-import { AddCarDto } from '../dto/addCar.dto';
-import { AccessTokenGuard } from '../modules/auth/accessToken.guard';
-import { RolesGuard } from '../modules/auth/roles.guard';
+import { AddCarDto } from './addCar.dto';
+import { AccessTokenGuard } from '../auth/tokens/accessToken.guard';
+import { RolesGuard } from '../auth/users/roles.guard';
 import { Request } from 'express';
 
 @Controller()

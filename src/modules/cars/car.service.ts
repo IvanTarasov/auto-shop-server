@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../../orm-service/prisma.service';
 import { Car, Prisma } from '@prisma/client';
 import { unlink } from 'fs';
 

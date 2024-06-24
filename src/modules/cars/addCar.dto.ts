@@ -1,5 +1,5 @@
 import { $Enums } from '@prisma/client';
-import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class AddCarDto {
     @IsString()

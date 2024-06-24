@@ -9,11 +9,11 @@ import {
     Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SingInDto } from '../../dto/singIn.dto';
-import { RegistrationDto } from '../../dto/registration.dto';
+import { SingInDto } from './singIn.dto';
+import { RegistrationDto } from './registration.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from './accessToken.guard';
-import { RefreshTokenGuard } from './refreshToken.guard';
+import { AccessTokenGuard } from '../tokens/accessToken.guard';
+import { RefreshTokenGuard } from '../tokens/refreshToken.guard';
 
 @Controller('auth')
 export class AuthController {

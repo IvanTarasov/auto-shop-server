@@ -10,11 +10,11 @@ import {
     UseGuards,
     SetMetadata,
 } from '@nestjs/common';
-import { OrderService } from '../services/order.service';
+import { OrderService } from '../orders/order.service';
 import { $Enums, Order as OrderModel, Prisma } from '@prisma/client';
-import { AddOrderDto } from '../dto/addOrder.dto';
-import { AccessTokenGuard } from '../modules/auth/accessToken.guard';
-import { RolesGuard } from '../modules/auth/roles.guard';
+import { AddOrderDto } from './addOrder.dto';
+import { AccessTokenGuard } from '../auth/tokens/accessToken.guard';
+import { RolesGuard } from '../auth/users/roles.guard';
 
 @Controller()
 export class OrderController {

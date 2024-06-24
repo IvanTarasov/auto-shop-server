@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/users/auth.module';
 
-import { CarController } from '../controllers/car.controller';
-import { OrderController } from '../controllers/order.controller';
+import { CarController } from './cars/car.controller';
+import { OrderController } from './orders/order.controller';
 
-import { PrismaService } from '../services/prisma.service';
-import { CarService } from '../services/car.service';
-import { OrderService } from '../services/order.service';
-import { UserModule } from './auth/user.module';
+import { PrismaService } from '../orm-service/prisma.service';
+import { CarService } from '../modules/cars/car.service';
+import { OrderService } from '../modules/orders/order.service';
+import { UserModule } from '../modules/auth/users/user.module';
 
 @Module({
     imports: [
