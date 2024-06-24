@@ -57,8 +57,8 @@ npm start
 "price": some_price,
 "year": some_year,
 ?"description": "some_descr",
-"type": some_type, > SPORT, LUX, TUNED, ORIGINAL
-"status": some_status > SOLD, EXPOSED, PROCESSED (Only EXPOSED for USER)
+"type": some_type,            // SPORT, LUX, TUNED, ORIGINAL
+"status": some_status        // SOLD, EXPOSED, PROCESSED (Only EXPOSED for USER)
 "file": IMG_FILE.jpg
 }
 ```
@@ -76,7 +76,7 @@ npm start
 ```
 ['ADMIN']
 [GET]
-/car?type=TYPE&status=STATUS&order=ORDER > order: desc or acs
+/car?type=TYPE&status=STATUS&order=ORDER // order: desc or acs
 ```
 
 > Get car by ID
@@ -91,7 +91,7 @@ npm start
 
 ```
 [GET]
-/exp-car?type=TYPE&order=ORDER > order: desc or acs
+/exp-car?type=TYPE&order=ORDER // order: desc or acs
 ```
 
 > Get exposed car by ID
